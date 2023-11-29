@@ -1,21 +1,42 @@
 package com.ecommerce.www.model;
 
 import java.util.Date;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "orders")
 public class Order {
 	
+	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer orderId;
 	private String orderNumber;
 	private Date creationDate;
 	private Date deliveryDate;
+	private double total;
+	
+	@ManyToOne
+	private User user;
+	
+	@OneToOne(mappedBy="order")
+	private OrderDetail orderDetail;
+	
+	
 	public Order() {
 	}
-	public Order(Integer orderId, String orderNumber, Date creationDate, Date deliveryDate) {
+	
+	
+	public Order(Integer orderId, String orderNumber, Date creationDate, Date deliveryDate, double total) {
 		super();
 		this.orderId = orderId;
 		this.orderNumber = orderNumber;
 		this.creationDate = creationDate;
 		this.deliveryDate = deliveryDate;
+		this.total = total;
 	}
+
+
+
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -40,11 +61,41 @@ public class Order {
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
+	
+	public double getTotal() {
+		return total;
+	}
+	public void setTotal(double total) {
+		this.total = total;
+	}
+	
+	
+	public User getUser() {
+		return user;
+	}
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	public OrderDetail getOrderDetail() {
+		return orderDetail;
+	}
+
+
+	public void setOrderDetail(OrderDetail orderDetail) {
+		this.orderDetail = orderDetail;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Order [orderId=" + orderId + ", orderNumber=" + orderNumber + ", creationDate=" + creationDate + ", deliveryDate="
 				+ deliveryDate + "]";
 	}
+	
 	
 	
 	

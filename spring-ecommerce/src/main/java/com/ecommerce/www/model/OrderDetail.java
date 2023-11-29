@@ -1,19 +1,30 @@
 package com.ecommerce.www.model;
 
-public class orderDetail {
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "ordersdetails")
+public class OrderDetail {
+	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer detailId;
 	private String orderName;
 	private double orderQantity;
 	private double orderPrice;
 	private double orderTotal;
 	
-	public orderDetail() {
+	@OneToOne
+	private Order order;
+	
+	@ManyToOne
+	private Product product;
+	
+	public OrderDetail() {
 	}
 	
 	
 
-	public orderDetail(Integer detailId, String orderName, double orderQantity, double orderPrice, double orderTotal) {
+	public OrderDetail(Integer detailId, String orderName, double orderQantity, double orderPrice, double orderTotal) {
 		super();
 		this.detailId = detailId;
 		this.orderName = orderName;
@@ -62,6 +73,30 @@ public class orderDetail {
 
 	public void setOrderTotal(double orderTotal) {
 		this.orderTotal = orderTotal;
+	}
+
+
+
+	public Order getOrder() {
+		return order;
+	}
+
+
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+
+
+	public Product getProduct() {
+		return product;
+	}
+
+
+
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 	
 	

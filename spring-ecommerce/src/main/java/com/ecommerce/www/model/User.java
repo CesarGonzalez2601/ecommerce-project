@@ -1,7 +1,16 @@
 package com.ecommerce.www.model;
 
+import java.util.*;
+
+import jakarta.persistence.*;
+
+
+@Entity
+@Table(name = "usuarios")
 public class User {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 	private String username;
@@ -11,11 +20,15 @@ public class User {
 	private String rolType;
 	private String password;
 	
+	@OneToMany(mappedBy = "user")
+	private List<Product> products;
 	
+	@OneToMany(mappedBy = "user")
+	private List<Order> order;
 	
 	public User() {
 	}
-	
+		
 	public User(Integer id, String name, String username, String email, String address, String phoneNumber,
 			String rolType, String password) {
 		super();
@@ -28,6 +41,15 @@ public class User {
 		this.rolType = rolType;
 		this.password = password;
 	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	public Integer getId() {
 		return id;
 	}
