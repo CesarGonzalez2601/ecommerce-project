@@ -25,13 +25,17 @@ import jakarta.servlet.http.HttpSession;
 public class ProductController {
 	
 	@Autowired
+	private ProductService productoService;
+	
+	@Autowired
 	private UploadFileService upload;
 	
 	@Autowired
 	private ProductService productService;
 	
 	@GetMapping("")
-	public String show() {
+	public String show(Model model) {
+		model.addAttribute("productos", productService.findAll());
 		return "productos/show";
 	}
 
@@ -56,12 +60,47 @@ public class ProductController {
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable Integer id, Model model) {
 		Product product= new Product();
-		Optional<Product> optionalProducto=productService.get(id);
+		Optional<Product> optionalProducto=productoService.get(id);
 		product= optionalProducto.get();
-		
 		model.addAttribute("product", product);
 		
 		return "productos/edit";
+	}
+	
+	@PostMapping("/update")
+	public String update(Product product, @RequestParam("img") MultipartFile file ) throws IOException {
+		Product p= new Product();
+		p=productoService.get(product.getProductId()).get();
+		
+		if (file.isEmpty()) { // editamos el producto pero no cambiamos la imagem
+			
+			product.setProductImage(p.getProductImage());
+		}else {// cuando se edita tbn la imagen			
+			//eliminar cuando no sea la imagen por defecto
+			if (!p.getProductImage().equals("default.jpg")) {
+				upload.deleteImage(p.getProductImage());
+			}
+			String nameImage= upload.saveImage(file);
+			product.setProductImage(nameImage);
+		}
+		product.setUser(p.getUser());
+		productService.update(product);		
+		return "redirect:/productos";
+	}
+	
+	@GetMapping("/delete/{prodductId}")
+	public String delete(@PathVariable Integer productId) {
+		
+		Product p = new Product();
+		p=productoService.get(productId).get();
+		
+		//eliminar cuando no sea la imagen por defecto
+		if (!p.getProductImage().equals("default.jpg")) {
+			upload.deleteImage(p.getProductImage());
+		}
+		
+		productoService.delete(productId);
+		return "redirect:/productos";
 	}
 	
 }
