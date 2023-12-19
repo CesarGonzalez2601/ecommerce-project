@@ -90,7 +90,7 @@ public class UserController {
 			return "usuario/detallecompra";
 		}
 		
-		@GetMapping("/cerrar")
+		@GetMapping("/logout")
 		public String cerrarSesion( HttpSession session ) {
 			session.removeAttribute("idusuario");
 			return "redirect:/";
